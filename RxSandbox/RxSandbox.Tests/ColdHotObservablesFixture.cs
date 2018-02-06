@@ -39,11 +39,32 @@ namespace RxSandbox.Tests
             var hotObservable = Observable.Interval(TimeSpan.FromSeconds(1)).Take(5).Publish();
             hotObservable.Connect();
 
+            await Task.Delay(TimeSpan.FromSeconds(3));
+
             hotObservable
                 .Subscribe(i => TestContext.Out.WriteLine($"First subscription --> {i}"),
                 () => firstSubscription.SetResult());
 
+            hotObservable
+                .Subscribe(i => TestContext.Out.WriteLine($"Second subscription --> {i}"),
+                () => secondSubscription.SetResult());
+
+            await Task.WhenAll(firstSubscription.Task, secondSubscription.Task);
+        }
+
+        [Test]
+        public async Task RefCount_TurnsColdObservableIntoHot()
+        {
+            var firstSubscription = new TaskCompletionSource();
+            var secondSubscription = new TaskCompletionSource();
+
+            var hotObservable = Observable.Interval(TimeSpan.FromSeconds(1)).Take(5).Publish().RefCount();
+
             await Task.Delay(TimeSpan.FromSeconds(3));
+
+            hotObservable
+                .Subscribe(i => TestContext.Out.WriteLine($"First subscription --> {i}"),
+                () => firstSubscription.SetResult());
 
             hotObservable
                 .Subscribe(i => TestContext.Out.WriteLine($"Second subscription --> {i}"),
