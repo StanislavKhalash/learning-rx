@@ -10,7 +10,7 @@ namespace RxSandbox.Tests
     public class ColdHotObservablesFixture
     {
         [Test]
-        public async Task ColdObservable()
+        public async Task Interval_IsColdObservable()
         {
             var firstSubscription = new TaskCompletionSource();
             var secondSubscription = new TaskCompletionSource();
@@ -31,7 +31,7 @@ namespace RxSandbox.Tests
         }
 
         [Test]
-        public async Task TurningColdObservableIntoHot()
+        public async Task PublishAndConnect_TurnsColdObservableIntoHot()
         {
             var firstSubscription = new TaskCompletionSource();
             var secondSubscription = new TaskCompletionSource();
@@ -53,7 +53,7 @@ namespace RxSandbox.Tests
         }
 
         [Test]
-        public async Task TurningHotObservableIntoCold()
+        public async Task Replay_TurnsHotObservableIntoCold()
         {
             var firstSubscription = new TaskCompletionSource();
             var secondSubscription = new TaskCompletionSource();
